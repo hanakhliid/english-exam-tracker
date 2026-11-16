@@ -2,7 +2,7 @@ import streamlit as st
 
 # إعداد الصفحة وتغيير الأيقونة
 st.set_page_config(
-    page_title="نتيجة الامتحان الشامل - English House Academy",
+    page_title="نتيجة الامتحان الشامل - English House ",
     page_icon="📚",
     layout="centered",
 )
