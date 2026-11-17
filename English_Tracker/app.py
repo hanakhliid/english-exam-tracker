@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered",
 )
 
-# تنسيق CSS مخصص للعنوان الفني وأزرار السهم التفاعلية
+# تنسيق CSS مخصص للعنوان الفني
 st.markdown(
     """
     <style>
@@ -164,40 +164,20 @@ if st.button("عرض النتيجة", use_container_width=True):
             unsafe_allow_html=True,
         )
 
-# 6. معرض الصور بأزرار أسهم أنيقة (‹ و ›) على الجانبين
+# 6. معرض الصور التفاعلي (باستخدام selectbox شيك جداً ونظيف وخالي من الأخطاء)
 st.write("---")
 st.markdown("<h4 style='text-align: center;'>معرض صور الأكاديمية</h4>", unsafe_allow_html=True)
 
-if "img_index" not in st.session_state:
-    st.session_state.img_index = 0
+# اختيار الصورة بطريقة سهلة ونظيفة تمنع أي مشاكل في السيرفر
+selected_img_name = st.selectbox("اختر الصورة لعرضها:", ["صورة 1 (mr1)", "صورة 2 (mr2)"], label_visibility="collapsed")
 
-images_list = ["mr1.jpeg", "mr2.jpeg"]
-
-# تصميم أعمدة بحيث تكون الأزرار بجانب الصورة
-col_left, col_img, col_right = st.columns([1, 8, 1])
-
-with col_left:
-    st.write("")
-    st.write("")
-    st.write("")
-    if st.button("‹"):
-        st.session_state.img_index = (st.session_state.img_index - 1) % len(images_list)
-        st.rerun()
-
-with col_img:
-    current_image = images_list[st.session_state.img_index]
+if "1" in selected_img_name:
     try:
-        st.image(current_image, use_container_width=True)
+        st.image("mr1.jpeg", use_container_width=True)
     except:
-        try:
-            st.image(f"English_Tracker/{current_image}", use_container_width=True)
-        except:
-            st.info(f"جارٍ تحميل {current_image}")
-
-with col_right:
-    st.write("")
-    st.write("")
-    st.write("")
-    if st.button("›"):
-        st.session_state.img_index = (st.session_state.img_index + 1) % len(images_list)
-        st.rerun()
+        st.image("English_Tracker/mr1.jpeg", use_container_width=True)
+else:
+    try:
+        st.image("mr2.jpeg", use_container_width=True)
+    except:
+        st.image("English_Tracker/mr2.jpeg", use_container_width=True)
