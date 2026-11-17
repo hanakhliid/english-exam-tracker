@@ -106,12 +106,12 @@ st.markdown(
 )
 
 
-# دالة ذكية تبحث عن الصورة في كل المسارات الممكنة ع السيرفر
+# دالة ذكية ومحدثة للبحث عن الصور في مسار الكلاود والمحلي
 def find_image(filename):
   paths = [
       filename,
       os.path.join("English_Tracker", filename),
-      os.path.join("..", filename),
+      os.path.join(".", filename),
   ]
   for p in paths:
     if os.path.exists(p):
