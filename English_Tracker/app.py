@@ -123,7 +123,7 @@ def find_image(filename):
 col1, col2 = st.columns([1, 2])
 
 with col1:
-  logo_file = find_image("logo.png.jpeg")
+  logo_file = find_image("logo.jpeg")
   if os.path.exists(logo_file):
     st.image(logo_file, width=120)
   else:
@@ -177,7 +177,7 @@ if st.button("عرض النتيجة", use_container_width=True):
         f"""
         <div class="result-box">
             <h2 style="color: #922B21 !important; margin-bottom: 15px;">نتيجة الطالب</h2>
-            <p style="font-size: 18px; margin: 5px 0;"><b>اسم الطالب:</b> هناء خالد سيد</p>
+            <p style="font-size: 18px; margin: 5px 0;"><b>اسم الطالب:</b> هنا خالد سيد</p>
             <p style="font-size: 18px; margin: 5px 0;"><b>الصف الدراسي:</b> {grade_level}</p>
             <p style="font-size: 18px; margin: 5px 0;"><b>رقم الجلوس:</b> {seat_no}</p>
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #E6B0AA;">
