@@ -105,32 +105,43 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 1. تجميع اللوجو والعنوان الفني مع حماية ضد فقدان الصورة
+
+# دالة ذكية تبحث عن الصورة في كل المسارات الممكنة ع السيرفر
+def find_image(filename):
+  paths = [
+      filename,
+      os.path.join("English_Tracker", filename),
+      os.path.join("..", filename),
+  ]
+  for p in paths:
+    if os.path.exists(p):
+      return p
+  return filename
+
+
+# 1. تجميع اللوجو والعنوان الفني
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    logo_path = "logo.png.jpeg"
-    if not os.path.exists(logo_path):
-        logo_path = "logo.png"  # بديل لو الاسم مختلف
-
-    if os.path.exists(logo_path):
-        st.image(logo_path, width=120)
-    else:
-        st.markdown(
-            "<b style='color:#E74C3C;'>[English House]</b>",
-            unsafe_allow_html=True,
-        )
+  logo_file = find_image("logo.png.jpeg")
+  if os.path.exists(logo_file):
+    st.image(logo_file, width=120)
+  else:
+    st.markdown(
+        "<b style='color:#E74C3C; font-size:20px;'>[English House]</b>",
+        unsafe_allow_html=True,
+    )
 
 with col2:
-    st.markdown(
-        """
+  st.markdown(
+      """
         <div style="margin-top: 5px;">
             <div class="title-first">The first</div>
             <div class="title-english">In english</div>
         </div>
         """,
-        unsafe_allow_html=True,
-    )
+      unsafe_allow_html=True,
+  )
 
 # اسم المستر
 st.markdown(
@@ -155,25 +166,26 @@ seat_no = st.text_input("أدخل رقم الجلوس", placeholder="مثلاً:
 
 # 5. زر عرض النتيجة
 if st.button("عرض النتيجة", use_container_width=True):
-    if seat_no.strip() == "":
-        st.markdown(
-            '<div class="custom-error">⚠️ الرجاء إدخال رقم الجلوس أولاً لعرض النتيجة!</div>',
-            unsafe_allow_html=True,
-        )
-    else:
-            st.markdown(
-                f"""
-            <div class="result-box">
-                <h2 style="color: #922B21 !important; margin-bottom: 15px;">نتيجة الطالب</h2>
-                <p style="font-size: 18px; margin: 5px 0;"><b>اسم الطالب:</b> هناء خالد سيد</p>
-                <p style="font-size: 18px; margin: 5px 0;"><b>الصف الدراسي:</b> {grade_level}</p>
-                <p style="font-size: 18px; margin: 5px 0;"><b>رقم الجلوس:</b> {seat_no}</p>
-                <hr style="margin: 15px 0; border: 0; border-top: 1px solid #E6B0AA;">
-                <p style="font-size: 22px; color: #C0392B !important; font-weight: bold;">درجة الامتحان: 55 / 60</p>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
+  if seat_no.strip() == "":
+    st.markdown(
+        '<div class="custom-error">⚠️ الرجاء إدخال رقم الجلوس أولاً لعرض'
+        " النتيجة!</div>",
+        unsafe_allow_html=True,
+    )
+  else:
+    st.markdown(
+        f"""
+        <div class="result-box">
+            <h2 style="color: #922B21 !important; margin-bottom: 15px;">نتيجة الطالب</h2>
+            <p style="font-size: 18px; margin: 5px 0;"><b>اسم الطالب:</b> هناء خالد سيد</p>
+            <p style="font-size: 18px; margin: 5px 0;"><b>الصف الدراسي:</b> {grade_level}</p>
+            <p style="font-size: 18px; margin: 5px 0;"><b>رقم الجلوس:</b> {seat_no}</p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #E6B0AA;">
+            <p style="font-size: 22px; color: #C0392B !important; font-weight: bold;">درجة الامتحان: 55 / 60</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # 6. معرض الصور بأزرار أسهم أنيقة (‹ و ›) على الجانبين
 st.write("---")
@@ -183,35 +195,36 @@ st.markdown(
 )
 
 if "img_index" not in st.session_state:
-    st.session_state.img_index = 0
+  st.session_state.img_index = 0
 
 images_list = ["mr1.jpeg", "mr2.jpeg"]
 
 col_left, col_img, col_right = st.columns([1, 8, 1])
 
 with col_left:
-    st.write("")
-    st.write("")
-    st.write("")
-    if st.button("‹"):
-        st.session_state.img_index = (
-            st.session_state.img_index - 1
-        ) % len(images_list)
-        st.rerun()
+  st.write("")
+  st.write("")
+  st.write("")
+  if st.button("‹"):
+    st.session_state.img_index = (st.session_state.img_index - 1) % len(
+        images_list
+    )
+    st.rerun()
 
 with col_img:
-    current_image = images_list[st.session_state.img_index]
-    if os.path.exists(current_image):
-        st.image(current_image, use_container_width=True)
-    else:
-        st.info(f"صورة {current_image} غير موجودة في المجلد الحالي")
+  current_image_name = images_list[st.session_state.img_index]
+  resolved_image_path = find_image(current_image_name)
+  if os.path.exists(resolved_image_path):
+    st.image(resolved_image_path, use_container_width=True)
+  else:
+    st.info(f"جارٍ تحميل {current_image_name}")
 
 with col_right:
-    st.write("")
-    st.write("")
-    st.write("")
-    if st.button("›"):
-        st.session_state.img_index = (
-            st.session_state.img_index + 1
-        ) % len(images_list)
-        st.rerun()
+  st.write("")
+  st.write("")
+  st.write("")
+  if st.button("›"):
+    st.session_state.img_index = (st.session_state.img_index + 1) % len(
+        images_list
+    )
+    st.rerun()
