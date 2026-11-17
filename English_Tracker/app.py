@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 
 # إعداد الصفحة وتغيير الأيقونة
@@ -7,7 +8,7 @@ st.set_page_config(
     layout="centered",
 )
 
-# تنسيق CSS مخصص للعنوان الفني
+# تنسيق CSS مخصص للعنوان الفني وأزرار السهم التفاعلية
 st.markdown(
     """
     <style>
@@ -104,11 +105,21 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 1. تجميع اللوجو والعنوان الفني
+# 1. تجميع اللوجو والعنوان الفني مع حماية ضد فقدان الصورة
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.image("logo.png.jpeg", width=120)
+    logo_path = "logo.png.jpeg"
+    if not os.path.exists(logo_path):
+        logo_path = "logo.png"  # بديل لو الاسم مختلف
+
+    if os.path.exists(logo_path):
+        st.image(logo_path, width=120)
+    else:
+        st.markdown(
+            "<b style='color:#E74C3C;'>[English House]</b>",
+            unsafe_allow_html=True,
+        )
 
 with col2:
     st.markdown(
@@ -150,8 +161,8 @@ if st.button("عرض النتيجة", use_container_width=True):
             unsafe_allow_html=True,
         )
     else:
-        st.markdown(
-            f"""
+            st.markdown(
+                f"""
             <div class="result-box">
                 <h2 style="color: #922B21 !important; margin-bottom: 15px;">نتيجة الطالب</h2>
                 <p style="font-size: 18px; margin: 5px 0;"><b>اسم الطالب:</b> هناء خالد سيد</p>
@@ -161,23 +172,46 @@ if st.button("عرض النتيجة", use_container_width=True):
                 <p style="font-size: 22px; color: #C0392B !important; font-weight: bold;">درجة الامتحان: 55 / 60</p>
             </div>
             """,
-            unsafe_allow_html=True,
-        )
+                unsafe_allow_html=True,
+            )
 
-# 6. معرض الصور التفاعلي (باستخدام selectbox شيك جداً ونظيف وخالي من الأخطاء)
+# 6. معرض الصور بأزرار أسهم أنيقة (‹ و ›) على الجانبين
 st.write("---")
-st.markdown("<h4 style='text-align: center;'>معرض صور الأكاديمية</h4>", unsafe_allow_html=True)
+st.markdown(
+    "<h4 style='text-align: center;'>معرض صور الأكاديمية</h4>",
+    unsafe_allow_html=True,
+)
 
-# اختيار الصورة بطريقة سهلة ونظيفة تمنع أي مشاكل في السيرفر
-selected_img_name = st.selectbox("اختر الصورة لعرضها:", ["صورة 1 (mr1)", "صورة 2 (mr2)"], label_visibility="collapsed")
+if "img_index" not in st.session_state:
+    st.session_state.img_index = 0
 
-if "1" in selected_img_name:
-    try:
-        st.image("mr1.jpeg", use_container_width=True)
-    except:
-        st.image("English_Tracker/mr1.jpeg", use_container_width=True)
-else:
-    try:
-        st.image("mr2.jpeg", use_container_width=True)
-    except:
-        st.image("English_Tracker/mr2.jpeg", use_container_width=True)
+images_list = ["mr1.jpeg", "mr2.jpeg"]
+
+col_left, col_img, col_right = st.columns([1, 8, 1])
+
+with col_left:
+    st.write("")
+    st.write("")
+    st.write("")
+    if st.button("‹"):
+        st.session_state.img_index = (
+            st.session_state.img_index - 1
+        ) % len(images_list)
+        st.rerun()
+
+with col_img:
+    current_image = images_list[st.session_state.img_index]
+    if os.path.exists(current_image):
+        st.image(current_image, use_container_width=True)
+    else:
+        st.info(f"صورة {current_image} غير موجودة في المجلد الحالي")
+
+with col_right:
+    st.write("")
+    st.write("")
+    st.write("")
+    if st.button("›"):
+        st.session_state.img_index = (
+            st.session_state.img_index + 1
+        ) % len(images_list)
+        st.rerun()
