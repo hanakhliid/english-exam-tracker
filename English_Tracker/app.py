@@ -173,7 +173,7 @@ if "img_index" not in st.session_state:
 
 images_list = ["mr1.jpeg", "mr2.jpeg"]
 
-# تصميم أعمدة بحيث تكون الأزرار بجانب الصورة (سهم يمين وسهم شمال)
+# تصميم أعمدة بحيث تكون الأزرار بجانب الصورة
 col_left, col_img, col_right = st.columns([1, 8, 1])
 
 with col_left:
