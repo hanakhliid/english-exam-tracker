@@ -2,12 +2,12 @@ import streamlit as st
 
 # إعداد الصفحة وتغيير الأيقونة
 st.set_page_config(
-    page_title="نتيجة الامتحان الشامل - English House ",
+    page_title="نتيجة الامتحان الشامل - English House",
     page_icon="📚",
     layout="centered",
 )
 
-# تنسيق CSS مخصص (كل الأزرار والصناديق بلون أحمر متناسق)
+# تنسيق CSS مخصص للعنوان الفني وأزرار السهم التفاعلية
 st.markdown(
     """
     <style>
@@ -16,16 +16,35 @@ st.markdown(
         background-color: #FFFFFF;
     }
     
-    /* تنسيق اسم المستر (خط أنيق ومميز) */
+    /* تنسيق اسم المستر */
     .instructor-name {
         text-align: center;
         font-size: 22px;
         font-family: 'Brush Script MT', cursive, serif;
         font-weight: bold;
         color: #333333;
-        margin-top: 5px;
+        margin-top: 0px;
         margin-bottom: 25px;
         letter-spacing: 1px;
+    }
+    
+    /* تنسيق العنوان الفني بالمسافة المضبوطة */
+    .title-first {
+        font-size: 36px !important;
+        font-weight: 900 !important;
+        color: #000000 !important;
+        font-family: 'Cairo', sans-serif;
+        margin: 0px;
+        line-height: 1.0;
+    }
+    
+    .title-english {
+        font-size: 32px !important;
+        font-weight: 900 !important;
+        color: #000000 !important;
+        font-family: 'Cairo', sans-serif;
+        margin-top: 5px;
+        margin-right: 25px !important;
     }
     
     /* تنسيق عنوان "الآن .. نتيجة الامتحان الشامل الاول" */
@@ -54,7 +73,7 @@ st.markdown(
         box-shadow: 0px 4px 10px rgba(231, 76, 60, 0.15);
     }
     
-    /* تغيير زر "عرض النتيجة" ليكون باللون الأحمر بدل الأخضر */
+    /* تغيير زر "عرض النتيجة" ليكون باللون الأحمر */
     div.stButton > button {
         background-color: #E74C3C;
         color: white;
@@ -85,12 +104,24 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 1. وضع لوجو الأكاديمية في المنتصف
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    st.image("logo.png.jpeg", width=150)
+# 1. تجميع اللوجو والعنوان الفني
+col1, col2 = st.columns([1, 2])
 
-# اسم المستر بخط أنيق
+with col1:
+    st.image("logo.png.jpeg", width=120)
+
+with col2:
+    st.markdown(
+        """
+        <div style="margin-top: 5px;">
+            <div class="title-first">The first</div>
+            <div class="title-english">In english</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# اسم المستر
 st.markdown(
     '<p class="instructor-name">~ Mr. Mohamed El Sayed ~</p>',
     unsafe_allow_html=True,
@@ -119,7 +150,6 @@ if st.button("عرض النتيجة", use_container_width=True):
             unsafe_allow_html=True,
         )
     else:
-        # عرض النتيجة بالبيانات المحددة (هناء خالد سيد - الصف الثالث الثانوي - 55/60)
         st.markdown(
             f"""
             <div class="result-box">
@@ -133,3 +163,41 @@ if st.button("عرض النتيجة", use_container_width=True):
             """,
             unsafe_allow_html=True,
         )
+
+# 6. معرض الصور بأزرار أسهم أنيقة (‹ و ›) على الجانبين
+st.write("---")
+st.markdown("<h4 style='text-align: center;'>معرض صور الأكاديمية</h4>", unsafe_allow_html=True)
+
+if "img_index" not in st.session_state:
+    st.session_state.img_index = 0
+
+images_list = ["mr1.jpeg", "mr2.jpeg"]
+
+# تصميم أعمدة بحيث تكون الأزرار بجانب الصورة (سهم يمين وسهم شمال)
+col_left, col_img, col_right = st.columns([1, 8, 1])
+
+with col_left:
+    st.write("")
+    st.write("")
+    st.write("")
+    if st.button("‹"):
+        st.session_state.img_index = (st.session_state.img_index - 1) % len(images_list)
+        st.rerun()
+
+with col_img:
+    current_image = images_list[st.session_state.img_index]
+    try:
+        st.image(current_image, use_container_width=True)
+    except:
+        try:
+            st.image(f"English_Tracker/{current_image}", use_container_width=True)
+        except:
+            st.info(f"جارٍ تحميل {current_image}")
+
+with col_right:
+    st.write("")
+    st.write("")
+    st.write("")
+    if st.button("›"):
+        st.session_state.img_index = (st.session_state.img_index + 1) % len(images_list)
+        st.rerun()
